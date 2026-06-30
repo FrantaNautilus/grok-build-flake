@@ -14,15 +14,19 @@
       rec {
         packages.grok-build = pkgs.stdenv.mkDerivation rec {
           pname = "grok-build";
-          version = "0.2.52"; # Adjust to latest track from x.ai
+          version = "0.2.77"; # Adjust to latest track from x.ai
 
-          src = pkgs.fetchurl {
-            url = "https://storage.googleapis.com/grok-build-public-artifacts/cli/grok-${version}-${system}";
-            # Tip: Run `nix store prefetch-file <url>` to get the true sha256 hash
-            sha256 = if system == "x86_64-linux" 
-                     then "073k69xcs1i2pfdrbzcgci6kxp4zjqiv54h7bjaw4hn9216f83vn"
-                     else "0r4yvarb7ins8v8n3jk0cb7r4w4rscwxi7adpkp4p455h51ay8y5"; # for aarch64-linux if needed
-          };
+          src = if system == "x86_64-linux"
+            then
+              pkgs.fetchurl {
+                url = "https://storage.googleapis.com/grok-build-public-artifacts/cli/grok-${version}-linux-x86_64";
+                sha256 = "0w26grkzfwk92708rg4p989dqb04r3gcjimi63c94ipgdshk6rws";
+              }
+            else
+              pkgs.fetchurl {
+                url = "https://storage.googleapis.com/grok-build-public-artifacts/cli/grok-${version}-linux-aarch64";
+                sha256 = "0dw46ap75cnavg5yha1ibr2fgc8j7i44l835pxf7zqjwhrdw44s9";
+              };
 
           nativeBuildInputs = with pkgs; [ autoPatchelfHook ];
           
